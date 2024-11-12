@@ -134,17 +134,14 @@ routes.patch('/usuarios', (req, res) => {
       }
     } else if (acao === 'remover') {
       if (tipo === 'Medicos') {
-        parsedData.Medicos = parsedData.Medicos.filter(m => m.Usuario !== usuario);
+        parsedData.Medicos = acessosData.Medicos.filter(m => m.Usuario !== usuario);
       } else if (tipo === 'Pacientes') {
-        parsedData.Pacientes = parsedData.Pacientes.filter(p => p.Usuario !== usuario);
+        parsedData.Pacientes = acessosData.Pacientes.filter(p => p.Usuario !== usuario);
       }
     }
     
-    fs.writeFile(filePath, JSON.stringify(parsedData, null, 2), (err) => {
-      if (err) return res.status(500).json({ error: 'Erro ao atualizar o arquivo' });
       // Envia os dados atualizados de volta ao cliente
       res.json(parsedData);
-    });
   });
 });
 
