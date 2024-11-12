@@ -4,12 +4,32 @@
       "Usuario": "diana.green123",
       "Senha": "DianaPass123!",
       "TipoDeAcesso": "Medico"
+    },
+    {
+      "Usuario": "johndoaaaaaae",
+      "Senha": "senha123asd",
+      "TipoDeAcesso": "Medico"
     }
   ],
   "Pacientes": [
     {
       "Usuario": "bob.brown654",
       "Senha": "BobPass654!",
+      "TipoDeAcesso": "Paciente"
+    },
+    {
+      "Usuario": "johndoe",
+      "Senha": "senha123",
+      "TipoDeAcesso": "Paciente"
+    },
+    {
+      "Usuario": "johndoaae",
+      "Senha": "senha123",
+      "TipoDeAcesso": "Paciente"
+    },
+    {
+      "Usuario": "johndoaaaaaae",
+      "Senha": "senha123",
       "TipoDeAcesso": "Paciente"
     }
   ],

@@ -178,10 +178,9 @@ routes.post('/paciente', (req, res) => {
       return res.status(400).json({ message: "Paciente já existe!" });
     }
 
-    // Adiciona o novo paciente com todas as propriedades
     acessos.Pacientes.push({
       Usuario: user,
-      Senha: password,  // Verifique que a senha também está sendo passada
+      Senha: password,
       TipoDeAcesso: 'Paciente'
     });
 
@@ -211,10 +210,9 @@ routes.post('/medico', (req, res) => {
       return res.status(400).json({ message: "Médico já existe!" });
     }
 
-    // Adiciona o novo médico com todas as propriedades
     acessos.Medicos.push({
       Usuario: user,
-      Senha: password,  // Verifique que a senha também está sendo passada
+      Senha: password,
       TipoDeAcesso: 'Medico'
     });
 
@@ -226,3 +224,4 @@ routes.post('/medico', (req, res) => {
     });
   });
 });
+module.exports = routes;
