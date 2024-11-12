@@ -150,7 +150,77 @@ const atendimentoFilePath = path.join(__dirname, 'src', 'Atendimentos.txt');
 
 // Endpoint para salvar atendimentos
 
+// Rota para adicionar paciente
+routes.post('/paciente', (req, res) => {
+  const { user, password } = req.body; // Captura os dados do novo paciente
 
+  // Chama a função para ler os acessos
+  lerAcessos((acessos) => {
+    if (!acessos) {
+      return res.status(500).send("Erro ao ler o arquivo de acessos.");
+    }
+
+    // Verifica se o paciente já existe
+    const pacienteExistente = acessos.Pacientes.find(
+      paciente => paciente.Usuario === user
+    );
+
+    if (pacienteExistente) {
+      return res.status(400).json({ message: "Paciente já existe!" });
+    }
+
+    // Adiciona o novo paciente ao array de Pacientes
+    acessos.Pacientes.push({
+      Usuario: user,
+      Senha: password,
+      TipoDeAcesso: 'Paciente'
+    });
+
+    // Salva as alterações no arquivo
+    salvarAcessos(acessos, (erro) => {
+      if (erro) {
+        return res.status(500).send("Erro ao salvar o novo paciente.");
+      }
+      return res.status(200).json({ message: "Paciente adicionado com sucesso!" });
+    });
+  });
+});
+
+// Rota para adicionar médico
+routes.post('/medico', (req, res) => {
+  const { user, password } = req.body; // Captura os dados do novo médico
+
+  // Chama a função para ler os acessos
+  lerAcessos((acessos) => {
+    if (!acessos) {
+      return res.status(500).send("Erro ao ler o arquivo de acessos.");
+    }
+
+    // Verifica se o médico já existe
+    const medicoExistente = acessos.Medicos.find(
+      medico => medico.Usuario === user
+    );
+
+    if (medicoExistente) {
+      return res.status(400).json({ message: "Médico já existe!" });
+    }
+
+    // Adiciona o novo médico ao array de Médicos
+    acessos.Medicos.push({
+      Usuario: user,
+      Senha: password,
+      TipoDeAcesso: 'Medico'
+    });
+
+    // Salva as alterações no arquivo
+    salvarAcessos(acessos, (erro) => {
+      if (erro) {
+        return res.status(500).send("Erro ao salvar o novo médico.");
+      }
+      return res.status(200).json({ message: "Médico adicionado com sucesso!" });
+    });
+  });
+});
 
 
 module.exports = routes;
