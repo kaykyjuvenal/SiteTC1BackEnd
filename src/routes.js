@@ -211,5 +211,48 @@ routes.post('/medico', (req, res) => {
       return res.status(200).json({ message: "Médico adicionado com sucesso!" });
     });
   });
+    // Rota para deletar médico
+  routes.post('/deleteMedico', (req, res) => {
+    const { usuario } = req.body;
+
+    lerAcessos((acessos) => {
+      if (!acessos) {
+        return res.status(500).send("Erro ao ler o arquivo de acessos.");
+      }
+
+      // Filtra a lista de médicos, removendo o médico com o usuário especificado
+      acessos.Medicos = acessos.Medicos.filter((medico) => medico.Usuario !== usuario);
+
+      // Salva as alterações
+      salvarAcessos(acessos, (erro) => {
+        if (erro) {
+          return res.status(500).send("Erro ao salvar as alterações.");
+        }
+        return res.status(200).json({ message: "Médico removido com sucesso!" });
+      });
+    });
+  });
+
+  // Rota para deletar paciente
+  routes.post('/deletePaciente', (req, res) => {
+    const { usuario } = req.body;
+
+    lerAcessos((acessos) => {
+      if (!acessos) {
+        return res.status(500).send("Erro ao ler o arquivo de acessos.");
+      }
+
+      // Filtra a lista de pacientes, removendo o paciente com o usuário especificado
+      acessos.Pacientes = acessos.Pacientes.filter((paciente) => paciente.Usuario !== usuario);
+
+      // Salva as alterações
+      salvarAcessos(acessos, (erro) => {
+        if (erro) {
+          return res.status(500).send("Erro ao salvar as alterações.");
+        }
+        return res.status(200).json({ message: "Paciente removido com sucesso!" });
+      });
+    });
+  });
 });
 module.exports = routes;
