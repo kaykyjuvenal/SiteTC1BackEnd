@@ -18,6 +18,6 @@ app.get('/', (req,res) =>{
 });
 
 
-app.listen(3000, ()=>{
+app.listen(port, ()=>{
     console.log("conectando porta padrão 3000")
 });
