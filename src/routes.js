@@ -7,55 +7,46 @@ const routes = express.Router();
 
 
 
-// Função para ler o arquivo acessos.txt
-function lerAcessos(callback) {
-  const filePath = path.join(__dirname, 'acessos.txt');
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Erro ao ler o arquivo acessos.txt:', err);
-      return callback(null);
-    }
-
-    try {
-      const acessos = JSON.parse(data);  // Parse JSON do arquivo
-      return callback(acessos);
-    } catch (parseError) {
-      console.error('Erro ao fazer parsing do arquivo acessos.txt:', parseError);
-      return callback(null);
-    }
-  });
-}
-const readFile = (filename) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filename, 'utf8', (err, data) => {
-      if (err) return reject(err);
-      try {
-        resolve(JSON.parse(data));
-      } catch (e) {
-        reject(new Error('Erro ao parsear JSON'));
+// Variável local para armazenar dados temporários em JSON
+const acessosData = {
+    "Medicos": [
+      {
+        "Usuario": "diana.green123",
+        "Senha": "DianaPass123!",
+        "TipoDeAcesso": "Medico"
       }
-    });
-  });
-};
+    ],
+    "Pacientes": [
+      {
+        "Usuario": "bob.brown654",
+        "Senha": "BobPass654!",
+        "TipoDeAcesso": "Paciente"
+      }
+    ],
+    "Administradores": [
+      {
+        "Usuario": "admin.user789",
+        "Senha": "AdminPass789!",
+        "TipoDeAcesso": "Administrador"
+      }
+    ]
+  };
 
-const writeFile = (filename, data) => {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(filename, JSON.stringify(data, null, 2), (err) => {
-      if (err) return reject(err);
-      resolve();
-    });
-  });
-};
 
-function salvarAcessos(acessos, callback) {
-  fs.writeFile(filePath, JSON.stringify(acessos, null, 2), 'utf8', (erro) => {
-    if (erro) {
-      console.error("Erro ao salvar os acessos:", erro);
-      return callback(erro);
-    }
+// Função para ler os dados
+function lerAcessos(callback) {
+  callback(acessosData);
+}
+
+// Função para salvar os dados
+function salvarAcessos(novosAcessos, callback) {
+  try {
+    // Atualiza os dados da variável local
+    Object.assign(acessosData, novosAcessos);  
     callback(null);
-  });
+  } catch (erro) {
+    callback(erro);
+  }
 }
 
 // Rota de login
