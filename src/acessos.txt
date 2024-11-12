@@ -4,10 +4,6 @@
       "Usuario": "diana.green123",
       "Senha": "DianaPass123!",
       "TipoDeAcesso": "Medico"
-    },
-    {
-      "Usuario": "opsdaokas",
-      "Senha": ""
     }
   ],
   "Pacientes": [

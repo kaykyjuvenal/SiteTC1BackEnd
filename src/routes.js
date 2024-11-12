@@ -47,9 +47,14 @@ const writeFile = (filename, data) => {
     });
   });
 };
+
 function salvarAcessos(acessos, callback) {
-  fs.writeFile("acessos.txt", JSON.stringify(acessos, null, 2), 'utf8', (erro) => {
-    callback(erro);
+  fs.writeFile(filePath, JSON.stringify(acessos, null, 2), 'utf8', (erro) => {
+    if (erro) {
+      console.error("Erro ao salvar os acessos:", erro);
+      return callback(erro);
+    }
+    callback(null);
   });
 }
 
@@ -156,32 +161,30 @@ const atendimentoFilePath = path.join(__dirname, 'src', 'Atendimentos.txt');
 
 // Endpoint para salvar atendimentos
 
+// Rota para adicionar paciente
 routes.post('/paciente', (req, res) => {
-  const { user, password } = req.body; // Captura os dados do novo paciente
+  const { user, password } = req.body;
 
-  // Chama a função para ler os acessos
   lerAcessos((acessos) => {
     if (!acessos) {
       return res.status(500).send("Erro ao ler o arquivo de acessos.");
     }
 
-    // Verifica se o paciente já existe
     const pacienteExistente = acessos.Pacientes.find(
-      paciente => paciente.Usuario === user
+      (paciente) => paciente.Usuario === user
     );
 
     if (pacienteExistente) {
       return res.status(400).json({ message: "Paciente já existe!" });
     }
 
-    // Adiciona o novo paciente ao array de Pacientes
+    // Adiciona o novo paciente com todas as propriedades
     acessos.Pacientes.push({
       Usuario: user,
-      Senha: password,
+      Senha: password,  // Verifique que a senha também está sendo passada
       TipoDeAcesso: 'Paciente'
     });
 
-    // Salva as alterações no arquivo
     salvarAcessos(acessos, (erro) => {
       if (erro) {
         return res.status(500).send("Erro ao salvar o novo paciente.");
@@ -191,33 +194,30 @@ routes.post('/paciente', (req, res) => {
   });
 });
 
-
+// Rota para adicionar médico
 routes.post('/medico', (req, res) => {
-  const { user, password } = req.body; // Captura os dados do novo médico
+  const { user, password } = req.body;
 
-  // Chama a função para ler os acessos
   lerAcessos((acessos) => {
     if (!acessos) {
       return res.status(500).send("Erro ao ler o arquivo de acessos.");
     }
 
-    // Verifica se o médico já existe
     const medicoExistente = acessos.Medicos.find(
-      medico => medico.Usuario === user
+      (medico) => medico.Usuario === user
     );
 
     if (medicoExistente) {
       return res.status(400).json({ message: "Médico já existe!" });
     }
 
-    // Adiciona o novo médico ao array de Médicos
+    // Adiciona o novo médico com todas as propriedades
     acessos.Medicos.push({
       Usuario: user,
-      Senha: password,
+      Senha: password,  // Verifique que a senha também está sendo passada
       TipoDeAcesso: 'Medico'
     });
 
-    // Salva as alterações no arquivo
     salvarAcessos(acessos, (erro) => {
       if (erro) {
         return res.status(500).send("Erro ao salvar o novo médico.");
@@ -226,5 +226,3 @@ routes.post('/medico', (req, res) => {
     });
   });
 });
-
-module.exports = routes;
