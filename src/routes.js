@@ -8,7 +8,7 @@ const routes = express.Router();
 
 
 // Variável local para armazenar dados temporários em JSON
-const acessosData = {
+const acessos = {
     "Medicos": [
       {
         "Usuario": "diana.green123",
@@ -35,14 +35,14 @@ const acessosData = {
 
 // Função para ler os dados
 function lerAcessos(callback) {
-  callback(acessosData);
+  callback(acessos);
 }
 
 // Função para salvar os dados
 function salvarAcessos(novosAcessos, callback) {
   try {
     // Atualiza os dados da variável local
-    Object.assign(acessosData, novosAcessos);  
+    Object.assign(acessos, novosAcessos);  
     callback(null);
   } catch (erro) {
     callback(erro);
@@ -111,20 +111,9 @@ routes.get('/usuarios', (req, res) => {
   });
 });
 
-const filePath = path.join(__dirname, '..', 'src', 'acessos.txt');
 
 routes.patch('/usuarios', (req, res) => {
   const { acao, tipo, usuario, dados } = req.body;
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'Erro ao ler o arquivo' });
-    
-    let parsedData;
-    try {
-      parsedData = JSON.parse(data);
-    } catch (parseError) {
-      return res.status(500).json({ error: 'Erro ao processar os dados do arquivo' });
-    }
     
     if (acao === 'adicionar') {
       if (tipo === 'Medicos') {
@@ -134,16 +123,15 @@ routes.patch('/usuarios', (req, res) => {
       }
     } else if (acao === 'remover') {
       if (tipo === 'Medicos') {
-        parsedData.Medicos = acessosData.Medicos.filter(m => m.Usuario !== usuario);
+        parsedData.Medicos = acessos.Medicos.filter(m => m.Usuario !== usuario);
       } else if (tipo === 'Pacientes') {
-        parsedData.Pacientes = acessosData.Pacientes.filter(p => p.Usuario !== usuario);
+        parsedData.Pacientes = acessos.Pacientes.filter(p => p.Usuario !== usuario);
       }
     }
     
       // Envia os dados atualizados de volta ao cliente
       res.json(parsedData);
   });
-});
 
 const atendimentoFilePath = path.join(__dirname, 'src', 'Atendimentos.txt');
 
@@ -180,7 +168,6 @@ routes.post('/paciente', (req, res) => {
     });
   });
 });
-
 // Rota para adicionar médico
 routes.post('/medico', (req, res) => {
   const { user, password } = req.body;
@@ -211,48 +198,38 @@ routes.post('/medico', (req, res) => {
       return res.status(200).json({ message: "Médico adicionado com sucesso!" });
     });
   });
-    // Rota para deletar médico
-  routes.post('/deleteMedico', (req, res) => {
-    const { usuario } = req.body;
+});
+// Rota para deletar médico
+routes.post('/deleteMedico', (req, res) => {
+  const { user } = req.body;
 
-    lerAcessos((acessos) => {
-      if (!acessos) {
-        return res.status(500).send("Erro ao ler o arquivo de acessos.");
-      }
+  // Filtra a lista de médicos para remover o médico com o usuário especificado
+  const novoMedicos = acessos.Medicos.filter(medico => medico.Usuario !== user);
 
-      // Filtra a lista de médicos, removendo o médico com o usuário especificado
-      acessos.Medicos = acessos.Medicos.filter((medico) => medico.Usuario !== usuario);
+  // Verifica se algum médico foi removido
+  if (novoMedicos.length === acessos.Medicos.length) {
+    return res.status(404).json({ message: "Médico não encontrado." });
+  }
 
-      // Salva as alterações
-      salvarAcessos(acessos, (erro) => {
-        if (erro) {
-          return res.status(500).send("Erro ao salvar as alterações.");
-        }
-        return res.status(200).json({ message: "Médico removido com sucesso!" });
-      });
-    });
-  });
+  // Atualiza a lista de médicos
+  acessos.Medicos = novoMedicos;
+  return res.status(200).json({ message: "Médico removido com sucesso!" });
+});
 
-  // Rota para deletar paciente
-  routes.post('/deletePaciente', (req, res) => {
-    const { usuario } = req.body;
+// Rota para deletar paciente
+routes.post('/deletePaciente', (req, res) => {
+  const { user } = req.body;
 
-    lerAcessos((acessos) => {
-      if (!acessos) {
-        return res.status(500).send("Erro ao ler o arquivo de acessos.");
-      }
+  // Filtra a lista de pacientes para remover o paciente com o usuário especificado
+  const novoPacientes = acessos.Pacientes.filter(paciente => paciente.Usuario !== user);
 
-      // Filtra a lista de pacientes, removendo o paciente com o usuário especificado
-      acessos.Pacientes = acessos.Pacientes.filter((paciente) => paciente.Usuario !== usuario);
+  // Verifica se algum paciente foi removido
+  if (novoPacientes.length === acessos.Pacientes.length) {
+    return res.status(404).json({ message: "Paciente não encontrado." });
+  }
 
-      // Salva as alterações
-      salvarAcessos(acessos, (erro) => {
-        if (erro) {
-          return res.status(500).send("Erro ao salvar as alterações.");
-        }
-        return res.status(200).json({ message: "Paciente removido com sucesso!" });
-      });
-    });
-  });
+  // Atualiza a lista de pacientes
+  acessos.Pacientes = novoPacientes;
+  return res.status(200).json({ message: "Paciente removido com sucesso!" });
 });
 module.exports = routes;
