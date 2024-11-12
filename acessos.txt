@@ -1,0 +1,40 @@
+{
+  "Medicos": [
+    {
+      "Usuario": "diana.green123",
+      "Senha": "DianaPass123!",
+      "TipoDeAcesso": "Medico"
+    },
+    {
+      "Usuario": "opsdaokas",
+      "Senha": ""
+    }
+  ],
+  "Pacientes": [
+    {
+      "Usuario": "bob.brown654",
+      "Senha": "BobPass654!",
+      "TipoDeAcesso": "Paciente"
+    },
+    {
+      "TipoDeAcesso": "Paciente"
+    }
+  ],
+  "Administradores": [
+    {
+      "Usuario": "admin.user789",
+      "Senha": "AdminPass789!",
+      "TipoDeAcesso": "Administrador"
+    },
+    {
+      "Usuario": "charlie.davis987",
+      "Senha": "CharliePass987!",
+      "TipoDeAcesso": "Administrador"
+    },
+    {
+      "Usuario": "fiona.martin789",
+      "Senha": "FionaPass789!",
+      "TipoDeAcesso": "Administrador"
+    }
+  ]
+}

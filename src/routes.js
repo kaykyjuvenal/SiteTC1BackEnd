@@ -6,6 +6,7 @@ const routes = express.Router();
 
 
 
+
 // Função para ler o arquivo acessos.txt
 function lerAcessos(callback) {
   const filePath = path.join(__dirname, 'acessos.txt');
@@ -46,6 +47,11 @@ const writeFile = (filename, data) => {
     });
   });
 };
+function salvarAcessos(acessos, callback) {
+  fs.writeFile("acessos.txt", JSON.stringify(acessos, null, 2), 'utf8', (erro) => {
+    callback(erro);
+  });
+}
 
 // Rota de login
 routes.post('/login', (req, res) => {
@@ -150,7 +156,6 @@ const atendimentoFilePath = path.join(__dirname, 'src', 'Atendimentos.txt');
 
 // Endpoint para salvar atendimentos
 
-// Rota para adicionar paciente
 routes.post('/paciente', (req, res) => {
   const { user, password } = req.body; // Captura os dados do novo paciente
 
@@ -186,7 +191,7 @@ routes.post('/paciente', (req, res) => {
   });
 });
 
-// Rota para adicionar médico
+
 routes.post('/medico', (req, res) => {
   const { user, password } = req.body; // Captura os dados do novo médico
 
@@ -221,6 +226,5 @@ routes.post('/medico', (req, res) => {
     });
   });
 });
-
 
 module.exports = routes;
