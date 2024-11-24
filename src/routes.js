@@ -36,9 +36,8 @@ const acessos = {
     ]
   };
   
-  // Função para obter uma lista de fotos da API Unsplash
-  async function fetchPhotosList() {
-    const clientId = "UAyZcwpLMS7aeLdK1opXUn-5Jams-2O_j420soTVBIs"; // Substitua por sua própria chave
+  async function fetchPhotos() {
+    const clientId = "UAyZcwpLMS7aeLdK1opXUn-5Jams-2O_j420soTVBIs"; // Substitua pela sua chave da API
     const API_URL = `https://api.unsplash.com/photos/?client_id=${clientId}`;
   
     try {
@@ -46,36 +45,36 @@ const acessos = {
       if (!response.ok) {
         throw new Error(`Erro na API: ${response.status}`);
       }
-      const data = await response.json();
-      return data; // Retorna a lista completa de fotos
+      return await response.json();
     } catch (error) {
-      console.error("Erro ao buscar lista de fotos:", error);
+      console.error("Erro ao buscar imagens:", error);
       return [];
     }
   }
   
-  // Função para adicionar imagens aleatórias aos usuários
-  async function addRandomImagesToUsers() {
-    const photos = await fetchPhotosList();
-  
-    if (photos.length === 0) {
-      console.error("Nenhuma imagem disponível para adicionar.");
+  // Função para atualizar o campo imagem para todos os usuários
+  async function updateImages() {
+    const photos = await fetchPhotos();
+    
+    if (!photos.length) {
+      console.error("Nenhuma imagem retornada pela API.");
       return;
     }
   
-    const roles = Object.keys(acessos);
-    
-    for (const role of roles) {
-      for (const user of acessos[role]) {
+    // Atualiza cada tipo de usuário
+    Object.keys(acessos).forEach(tipoUsuario => {
+      acessos[tipoUsuario].forEach(user => {
+        // Seleciona uma imagem aleatória
         const randomIndex = Math.floor(Math.random() * photos.length);
-        const randomImage = photos[randomIndex]?.urls?.regular || "https://via.placeholder.com/150"; // Placeholder em caso de falha
-        user.imagem= randomImage;
-      }
-    }
+        user.imagem = photos[randomIndex]?.urls?.regular || "https://via.placeholder.com/150"; // Placeholder em caso de falha
+      });
+    });
+  
+    console.log("Imagens atualizadas:", acessos);
   }
   
   // Executar a função
-  addRandomImagesToUsers();
+  updateImages();
 
 // Função para ler os dados
 function lerAcessos(callback) {
@@ -138,7 +137,7 @@ routes.post('/login', (req, res) => {
 // Rota para exibir todos os usernames e senhas
 routes.get('/usuarios', (req, res) => {
   // Chama a função para ler os acessos
-  addRandomImagesToUsers();
+  updateImages();
   lerAcessos((acessos) => {
     if (!acessos) {
       return res.status(500).send("Erro ao ler o arquivo de acessos.");
