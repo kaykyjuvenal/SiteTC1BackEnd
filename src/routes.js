@@ -69,7 +69,7 @@ const acessos = {
       for (const user of acessos[role]) {
         const randomIndex = Math.floor(Math.random() * photos.length);
         const randomImage = photos[randomIndex]?.urls?.regular || "https://via.placeholder.com/150"; // Placeholder em caso de falha
-        user.imagem = randomImage;
+        user.imagem= randomImage;
       }
     }
   }
@@ -146,9 +146,9 @@ routes.get('/usuarios', (req, res) => {
 
     // Criar um array com todos os usuários e senhas
     const usuarios = {
-      Administradores: acessos.Administradores.map(({ Usuario, Senha }) => ({ Usuario, Senha })),
-      Medicos: acessos.Medicos.map(({ Usuario, Senha }) => ({ Usuario, Senha })),
-      Pacientes: acessos.Pacientes.map(({ Usuario, Senha }) => ({ Usuario, Senha }))
+      Administradores: acessos.Administradores.map(({ Usuario, Senha, imagem }) => ({ Usuario, Senha, imagem })),
+      Medicos: acessos.Medicos.map(({ Usuario, Senha, imagem }) => ({ Usuario, Senha, imagem })),
+      Pacientes: acessos.Pacientes.map(({ Usuario, Senha,imagem }) => ({ Usuario, Senha,imagem }))
     };
 
     // Retornar o array de usuários e senhas
