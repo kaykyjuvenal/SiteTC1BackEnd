@@ -31,7 +31,49 @@ const acessos = {
       }
     ]
   };
-
+  
+  // Função para obter uma lista de fotos da API Unsplash
+  async function fetchPhotosList() {
+    const clientId = "UAyZcwpLMS7aeLdK1opXUn-5Jams-2O_j420soTVBIs"; // Substitua por sua própria chave
+    const API_URL = `https://api.unsplash.com/photos/?client_id=${clientId}`;
+  
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`);
+      }
+      const data = await response.json();
+      return data; // Retorna a lista completa de fotos
+    } catch (error) {
+      console.error("Erro ao buscar lista de fotos:", error);
+      return [];
+    }
+  }
+  
+  // Função para adicionar imagens aleatórias aos usuários
+  async function addRandomImagesToUsers() {
+    const photos = await fetchPhotosList();
+  
+    if (photos.length === 0) {
+      console.error("Nenhuma imagem disponível para adicionar.");
+      return;
+    }
+  
+    const roles = Object.keys(acessos);
+    
+    for (const role of roles) {
+      for (const user of acessos[role]) {
+        const randomIndex = Math.floor(Math.random() * photos.length);
+        const randomImage = photos[randomIndex]?.urls?.regular || "https://via.placeholder.com/150"; // Placeholder em caso de falha
+        user.imagem = randomImage;
+      }
+    }
+  
+    console.log("Acessos com imagens aleatórias:", acessos);
+  }
+  
+  // Executar a função
+  addRandomImagesToUsers();
 
 // Função para ler os dados
 function lerAcessos(callback) {
