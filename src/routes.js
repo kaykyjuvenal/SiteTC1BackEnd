@@ -136,6 +136,7 @@ routes.post('/login', (req, res) => {
 // Rota para exibir todos os usernames e senhas
 routes.get('/usuarios', (req, res) => {
   // Chama a função para ler os acessos
+  addRandomImagesToUsers();
   lerAcessos((acessos) => {
     if (!acessos) {
       return res.status(500).send("Erro ao ler o arquivo de acessos.");
