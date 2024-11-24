@@ -13,21 +13,25 @@ const acessos = {
       {
         "Usuario": "diana.green123",
         "Senha": "DianaPass123!",
-        "TipoDeAcesso": "Medico"
+        "TipoDeAcesso": "Medico",
+        "imagem": ""
       }
     ],
     "Pacientes": [
       {
         "Usuario": "bob.brown654",
         "Senha": "BobPass654!",
-        "TipoDeAcesso": "Paciente"
+        "TipoDeAcesso": "Paciente",
+        "imagem": ""
       }
     ],
     "Administradores": [
       {
         "Usuario": "admin.user789",
         "Senha": "AdminPass789!",
-        "TipoDeAcesso": "Administrador"
+        "TipoDeAcesso": "Administrador",
+        "imagem": ""
+
       }
     ]
   };
@@ -68,8 +72,6 @@ const acessos = {
         user.imagem = randomImage;
       }
     }
-  
-    console.log("Acessos com imagens aleatórias:", acessos);
   }
   
   // Executar a função
